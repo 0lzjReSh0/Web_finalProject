@@ -1,4 +1,4 @@
-describe('template spec9', () => {
+describe('template spec10', () => {
   it('passes', () => {
     cy.visit('http://localhost:3000/')
 

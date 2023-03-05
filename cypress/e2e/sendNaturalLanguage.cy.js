@@ -1,5 +1,8 @@
 describe('template spec4', () => {
   it('passes', () => {
+
+
+    //do the 3 first
     cy.visit('http://localhost:3000/')
 
     cy.get('[href="/login"]').click()

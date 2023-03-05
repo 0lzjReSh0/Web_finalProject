@@ -1,4 +1,6 @@
 describe('template spec6', () => {
+
+  //do the 5 first
   it('passes', () => {
     cy.visit('http://localhost:3000/')
 
