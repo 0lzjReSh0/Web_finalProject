@@ -43,7 +43,7 @@ export default function Posts({ post }) {
 
   /*The function for submiting posts*/
   const handlePostSubmit = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     const auth_token = localStorage.getItem("auth_token");
     console.log(`Bearer ${auth_token}`);
     try {
@@ -61,12 +61,13 @@ export default function Posts({ post }) {
       setPostTitle("");
       setPostContent("");
       setLanguage("");
+      
 
       // setName("")
-      console.log();
     } catch (error) {
       console.log(error);
     }
+
   };
   //Used to edit the post contents
   const handleTitleChange = (event) => {
