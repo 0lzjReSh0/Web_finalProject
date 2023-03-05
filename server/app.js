@@ -4,8 +4,10 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+// Import routes
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+// Load environment variables
 require("dotenv").config();
 const expressJWT = require("express-jwt");
 const cors = require("cors");
@@ -13,10 +15,16 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const jwtStrategy = require("passport-jwt").Strategy;
 const extractJwt = require("passport-jwt").ExtractJwt;
+// Import database models
 const Comment = require("./comment");
 const Post = require("./post");
+// Initialize the express app
 var app = express();
 const multer = require("multer");
+
+//import all the necessary modules in backend
+
+
 
 app.use(cors());
 app.use(logger("dev"));
@@ -26,8 +34,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-// app.use('/register', usersRouter);
 
+
+// Middleware to verify JWT token for protected routes
+
+// Don't require authentication for these routes
 app.use(
   expressJWT
     .expressjwt({ secret: process.env.SECRET, algorithms: ["HS256"] })
@@ -40,9 +51,12 @@ app.use(
       ],
     })
 );
-app.use("/users", passport.authenticate("jwt", { session: false }));
-// var MongoClient = require('mongodb').MongoClient;
 
+
+// Use passport to authenticate users for routes that require authentication
+app.use("/users", passport.authenticate("jwt", { session: false }));
+
+//connect the mongoose database
 mongoose
   .connect("mongodb://localhost:27017/testdb", {
     useNewUrlParser: true,
@@ -57,18 +71,22 @@ const opt = {
   secretOrKey: process.env.SECRET,
 };
 
-// const upload = multer({ dest: 'uploads/' })
 
+// Set up the multer module for handling file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
   },
+  // Define the filename format for uploaded files
   filename: function (req, file, cb) {
     cb(null, new Date().toISOString() + "-" + file.originalname);
   },
 });
 
+
+// Create a multer middleware with the defined storage configuration
 const upload = multer({ storage: storage });
+//Create users mongoose schema
 const users = new mongoose.Schema({
   name: {
     type: String,
@@ -107,7 +125,6 @@ users.statics.createAdminUser = async function () {
   });
   await adminUser.save();
 
-//   next();
 }
 //
 const Users = mongoose.model("Users", users);
@@ -115,24 +132,15 @@ const Users = mongoose.model("Users", users);
 
 Users.createAdminUser();
 
-// const adminUser = new Users({
-//     name: "admin",
-//     email: 'admin@163.com',
-//     password: 'Programmer!123',
-// });
-// adminUser
-//   .save()
-//   .then((admin1) => {
-//     console.log("Admin user saved:", admin1);
-//   })
-//   .catch((error) => {
-//     console.error("Error saving admin user:", error);
-//   });
+
 
 var admin = 0;
+
+// Register route for creating a new user
+
 app.post("/api/user/register/", upload.single("avatar"), (req, res) => {
   console.log(123455);
-  // console.log(req.body.avatar);
+  // Check if the password meets the requirements
   if (
     req.body.password.length < 8 ||
     !/[a-z]/.test(req.body.password) ||
@@ -144,12 +152,14 @@ app.post("/api/user/register/", upload.single("avatar"), (req, res) => {
   ) {
     return res.status(400).json("Password is not strong enough");
   }
-  console.log(11111111111111111);
+  // Check if the user already exists in the database
   Users.findOne({ email: req.body.email })
     .then((user) => {
       if (user) {
         return res.status(403).json("Email already in use");
       }
+
+      // Generate salt and hash the password
       bcrypt
         .genSalt(10)
         .then((salt) => {
@@ -161,10 +171,11 @@ app.post("/api/user/register/", upload.single("avatar"), (req, res) => {
                 email: req.body.email,
                 password: hashPass,
               });
-
+              // Add the avatar to the user if uploaded
               if (req.file && req.file.filename) {
                 Users.avatar = req.file.filename;
               }
+              // Save the user to the database
               newUser
                 .save()
                 .then((user) => {
@@ -192,33 +203,18 @@ app.post("/api/user/register/", upload.single("avatar"), (req, res) => {
       return res.status(500).json({ error: err });
     });
 });
-// passport.use(new jwtStrategy(opt, (jwt_payload, done) => {
-//     Users.findById(jwt_payload.id)
-//         .then(user => {
-//             if (user) {
-//                 return done(null, user);
-//             }
-//             return done(null, false);
-//         })
-//         .catch(err => console.error(err));
-// }));
+
 const adminEmail = "admin@163.com";
 const adminPassword = "Programmer!123";
-// const adminUser = new Users({
-//     name: "admin",
-//     email: 'admin@163.com',
-//     password: 'Programmer!123',
-// });
-// adminUser.save()
-//     .then((admin1) => {
-//         console.log('Admin user saved:', admin1);
-//     })
-//     .catch((error) => {
-//         console.error('Error saving admin user:', error);
-//     });
+
 console.log(1123);
 
+
+//Function to handle the login user information
+
 app.post("/api/user/login", (req, res) => {
+
+  // Check if the email exists in the database
   Users.findOne({ email: req.body.email })
     .then((user) => {
       console.log(1);
@@ -228,6 +224,7 @@ app.post("/api/user/login", (req, res) => {
           err: "User not found!",
         });
       }
+      // Check if the password matches with the stored password
       if (req.body.email !== "admin@163.com") {
         bcrypt.compare(req.body.password, user.password, (err, result) => {
           if (err) {
@@ -241,19 +238,20 @@ app.post("/api/user/login", (req, res) => {
           }
         });
       }
+      // Create a payload to be used to create the auth token
       const userPayload = {
         admin: "admin@163.com",
         adminToken: "Programmer!123",
         userId: user._id,
         email: user.email,
       };
-
+      // Create an auth token using the userPayload and the secret key
       const secret = process.env.SECRET;
       const authToken = jwt.sign(userPayload, secret, {
-        expiresIn: "500m",
+        expiresIn: "50m",
       });
       //authorize the admin super account
-
+      // Return the auth token to the client
       res.json({
         success: true,
         authToken: authToken,
@@ -276,7 +274,7 @@ app.post("/api/user/login", (req, res) => {
 });
 
 //
-//
+//Route for show all the posts in order of time
 app.get("/api/post", (req, res) => {
   try {
     console.log(123);
@@ -285,13 +283,12 @@ app.get("/api/post", (req, res) => {
     const limit = 10;
     const skip = (page - 1) * limit;
 
-    // const posts = Post.find().sort('-createdAt').skip(skip).limit(limit);
+    //find the posts
     Post.find()
       .limit(limit)
       .skip(skip)
       .sort("-createdAt")
       .then((posts) => {
-        // console.log(posts);
         res.json(posts);
       });
   } catch (error) {
@@ -314,7 +311,7 @@ app.post("/api/posts/", (req, res) => {
     content: content,
     language: language,
     email: req.auth.email,
-    // userId: userId
+    
   })
     .save()
     .then(() => {
@@ -383,14 +380,13 @@ app.get("/api/posts/:postId", async (req, res) => {
     return res.json({ post });
   }
 });
+
 //change the post content
 app.put("/api/posts/:postId", async (req, res) => {
   console.log(req.auth.email);
   console.log(req.auth.admin);
   console.log(admin);
-  // if (req.auth.email === req.auth.admin) {
-  //     admin = 1
-  // }
+
   if (!req.auth.email) {
     return res.status(404).json("Unauthorized");
   }
@@ -436,9 +432,7 @@ app.put("/api/posts/:postId", async (req, res) => {
 
 /**UPDATE the comment */
 app.put("/api/:commentId", async (req, res) => {
-  // if (req.body.password === "programmer!123" && req.body.email === "admin@163.com") {
-  //     admin = 1
-  // }
+
   if (!req.auth.email) {
     return res.status(404).json("Unauthorized");
   }
@@ -451,7 +445,7 @@ app.put("/api/:commentId", async (req, res) => {
     const comment = await Comment.findById(commentId);
 
     console.log(comment);
-
+    //update the last edited content and time
     comment.content = content;
     comment.updateAt = Date.now();
 
@@ -481,9 +475,9 @@ app.put("/api/:commentId", async (req, res) => {
     }
   }
 });
-// DELETE a post by ID
+// delete a post by ID
 app.delete("/api/posts/:postId", async (req, res) => {
-  // console.log(req.user.id);
+  
 
   const dpost = await Post.findById(req.params.postId);
   if (req.auth.email === req.auth.admin) {
@@ -511,7 +505,7 @@ app.get("/api/:commentId", async (req, res) => {
   });
 });
 
-/**DELETE the comment */
+/**delete the comment */
 
 app.delete("/api/:commentId", async (req, res) => {
   // console.log(req.user.id);

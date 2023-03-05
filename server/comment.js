@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+// create a mongoose model named Comment, 
+//used to store the users' comments and information
 const CommentSchema = new mongoose.Schema({
     postId: {
         type: String,
@@ -22,7 +23,7 @@ const CommentSchema = new mongoose.Schema({
         required: true
     }
 });
-
+//Create the comment model in mongoose
 const Comment = mongoose.model('Comment', CommentSchema);
 
 module.exports = Comment;

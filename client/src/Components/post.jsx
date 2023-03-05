@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import axios from "axios";
 const API_BASE_URL = "http://localhost:1234/api";
+
+/**Version 1.0.   now already abandoned */
+
 // Create a functional component to display a single post
 const Post = () => {
   // Initialize state variables
@@ -131,98 +134,7 @@ const Post = () => {
 
   return (
     <div className="container mt-5">
-      {/* <h1>Post Something</h1>
-      <div className="row">
-        <div className="col-md-6">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="postTitle">Title</label>
-              <input
-                type="text"
-                className="form-control"
-                id="postTitle"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="postContent">Content</label>
-              <textarea
-                className="form-control"
-                id="postContent"
-                rows="5"
-                value={code}
-                onChange={handleCodeChange}
-              ></textarea>
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Post
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <hr />
-
-      <h2>Posts</h2>
-      {posts.map((post) => (
-        <div key={post._id}>
-          <h3>{post.title}</h3>
-          <p>{post.content}</p>
-          <button
-            type="button"
-            className="btn btn-link"
-            onClick={() => handleShowComments(post._id)}
-          >
-            Show Comments
-          </button>
-          {post._id === activePostId && (
-            <div>
-              <hr />
-              <form onSubmit={handleCommentSubmit}>
-                <div className="form-group">
-                  <label htmlFor="comment">Leave a comment:</label>
-                  <textarea
-                    className="form-control"
-                    id="comment"
-                    rows="3"
-                    value={comments}
-                    onChange={(e) => setComments(e.target.value)}
-                  ></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </form>
-              <hr />
-              {comments.map((comment) => (
-                <div key={comment._id}>
-                  <p>{comment.content}</p>
-                  <small>by {comment.author}</small>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-      <div className="my-3">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-        >
-          Previous Page
-        </button>{" "}
-        <button
-          type="button"
-          className="btn btn-secondary"
-          disabled={posts.length < 10}
-          onClick={() => setPage(page + 1)}
-        >
-          Next Page
-        </button>
-      </div> */}
+      
     </div>
   );
 

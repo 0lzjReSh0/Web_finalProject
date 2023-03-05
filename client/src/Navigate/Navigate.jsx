@@ -1,13 +1,18 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from '../Components/Login'
+import Login from "../Components/Login";
 import Register from "../Components/Register";
-// import CommentForm from "../Components/Comment";
+import Home from "../Components/Home";
 import Posts from "../Components/posts";
+
+/**Version 2.0 */
+
+//this is the Home routing file for all the route
+//If the page are not found, it will show on the page
 const Navigation = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<p>Home</p>} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/posts" element={<Posts />} />

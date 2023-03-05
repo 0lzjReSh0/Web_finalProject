@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+// create a mongoose model named Post, 
+//used to store the users' posts and information
 const PostSchema = new mongoose.Schema({
     author: {
         type: mongoose.Schema.Types.ObjectId,
@@ -38,7 +39,7 @@ const PostSchema = new mongoose.Schema({
         default: []
     }
 });
-
+//Create the post model in mongoose
 const Post = mongoose.model('Post', PostSchema);
 
 module.exports = Post;

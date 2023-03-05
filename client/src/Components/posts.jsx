@@ -8,11 +8,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_BASE_URL = "http://localhost:1234/api";
-
+// Defines the Posts component
 export default function Posts({ post }) {
   const [editing, setEditing] = useState(false);
   const [posts, setPosts] = useState([]);
-  // const [post, setPost] = useState("");
+
   const [page, setPage] = useState(1);
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
@@ -29,13 +29,14 @@ export default function Posts({ post }) {
   const [votes, setVotes] = useState(1);
   const [editComment, setEditComment] = useState(false);
   const [editCo, setEditCo] = useState("");
-  // const [name, setName] = useState("");
+
+  // Fetches posts from the API and updates the state
   useEffect(() => {
     axios.get(`${API_BASE_URL}/post?page=${page}`).then((result) => {
       setPosts(result.data);
     });
   }, [page]);
-
+  // Highlights code blocks in the posts using highlight.js
   useEffect(() => {
     hljs.highlightAll();
   }, [posts]);
@@ -75,16 +76,17 @@ export default function Posts({ post }) {
   const handleContentChange = (event) => {
     setPosts({ ...posts, content: event.target.value });
   };
+  // Toggles the editing state
   const handleEdit = () => {
     setEditing(true);
   };
   const handleCancel = () => {
     setEditing(false);
-    // setTitle()
+    
   };
   const handleCancelComment = () => {
     setEditComment(false);
-    // setTitle()
+    
   };
 
   // handle the vote
@@ -127,10 +129,10 @@ export default function Posts({ post }) {
     });
     setTitle(response.data.title);
     setContent(response.data.content);
-    // alert(response.data.message)
-    // setName(response.data.name);
+
     setEditing(true);
   }
+  //function to save the user posts
   const handleSavePost = async (postId) => {
     const auth_token = localStorage.getItem("auth_token");
     setActivePostId(postId);
@@ -158,19 +160,19 @@ export default function Posts({ post }) {
       setActivePostId(null);
       setTitle("");
       setContent("");
-      // const response = await axios.get(`${API_BASE_URL}/post`);
+
+      // Do something with the updated post data
       setPosts(...posts, result.data);
       setEditing(false);
-      // Do something with the updated post data
     } catch (error) {
       console.error(error);
     }
 
     // show an error message to the user
   };
-
+  //function to submit the comments
   const handleCommentSubmit = async (event) => {
-    // event.preventDefault();
+
     const auth_token = localStorage.getItem("auth_token");
     try {
       const result = await axios.post(
@@ -189,7 +191,7 @@ export default function Posts({ post }) {
       console.log(error);
     }
   };
-
+  //function that allow all the users to see the comments
   const handleShowComments = async (postId) => {
     setActivePostId(postId);
     console.log(postId);
@@ -214,10 +216,7 @@ export default function Posts({ post }) {
     const info = await axios.delete(`${API_BASE_URL}/posts/${postId}`, {
       headers: { Authorization: `Bearer ${auth_token}` },
     });
-    alert(info.data.message)
-
-
-    
+    alert(info.data.message);
   }
   /**DELETE the comment */
   async function handleDeleteComment(commentId) {
@@ -242,10 +241,10 @@ export default function Posts({ post }) {
     });
     console.log(response.data);
     setEditCo(response.data.content);
-    // setName(response.data.name);
+
     setEditComment(true);
   }
-
+  //The function to save the comment.
   const handleSaveComment = async (commentId) => {
     const auth_token = localStorage.getItem("auth_token");
 
@@ -266,14 +265,14 @@ export default function Posts({ post }) {
             "Content-Type": "application/json",
           },
         }
-        );
-        alert(result.data.message)
+      );
+      alert(result.data.message);
 
       setEditCo("");
-      // const response = await axios.get(`${API_BASE_URL}/post`);
 
-      setEditComment(false);
+
       // Do something with the updated post data
+      setEditComment(false);
     } catch (error) {
       console.error(error);
     }
@@ -296,11 +295,11 @@ export default function Posts({ post }) {
             height="50"
           />
           <br />
-          <span>{post.email}   </span>
+          <span>{post.email} </span>
           <br />
           <br />
           <small className="text-muted">
-          ..........last edited at: {post.updateAt}
+            ..........last edited at: {post.updateAt}
           </small>
         </div>
       );
@@ -376,7 +375,7 @@ export default function Posts({ post }) {
               </pre>
             </div>
             <button
-            id="comment"
+              id="comment"
               type="button"
               className="btn btn-link"
               onClick={() => handleShowComments(post._id)}
@@ -414,7 +413,11 @@ export default function Posts({ post }) {
                     ></textarea>
                   </div>
 
-                  <button id="SavePost" type="submit" className="btn btn-primary mr-2">
+                  <button
+                    id="SavePost"
+                    type="submit"
+                    className="btn btn-primary mr-2"
+                  >
                     Save
                   </button>
                   <button
@@ -427,7 +430,7 @@ export default function Posts({ post }) {
                 </form>
               ) : (
                 <button
-                id="updatePost"
+                  id="updatePost"
                   type="button"
                   className="btn btn-primary"
                   onClick={() => handleUpdatePost(post._id)}
@@ -463,7 +466,11 @@ export default function Posts({ post }) {
                     onChange={(e) => setComment(e.target.value)}
                   ></textarea>
                 </div>
-                <button id="submitComment" type="submit" className="btn btn-primary">
+                <button
+                  id="submitComment"
+                  type="submit"
+                  className="btn btn-primary"
+                >
                   Submit
                 </button>
               </form>
@@ -536,7 +543,7 @@ export default function Posts({ post }) {
       ))}
       <div className="my-3">
         <button
-        id="previousPage"
+          id="previousPage"
           type="button"
           className="btn btn-secondary"
           disabled={page === 1}

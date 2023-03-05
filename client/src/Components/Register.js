@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+
+
 const Register = () => {
-  // const [email, setEmail] = useState("");
+
   const navigate = useNavigate();
   const [Error, setError] = useState("");
   const [user, setUser] = useState({
@@ -12,7 +15,7 @@ const Register = () => {
 
   });
   const [avatar, setAvatar] = useState(null);
-  // const navigate = useNavigate();
+  // design a navigation to login page
   const JumpPage = () => navigate("/login")
   const handleUpdate = (e) => {
     setUser({ ...user, [e.target.id]: e.target.value });
@@ -21,8 +24,10 @@ const Register = () => {
     setAvatar([...e.target.files]);
   }
 
+  //function to handle the submit of the register info
   const handleSubmit = async (event) => {
     event.preventDefault();
+    //create a formdata to store all the data
     const formData1 = new FormData();
     formData1.append("email", user.email);
     formData1.append("password", user.password);
@@ -43,7 +48,7 @@ const Register = () => {
         alert("Registered Successfully!")
       }
     } catch (error) {
-      // alert("The password is not strong enough")
+      //Show the error in the front page so that users can see
       setError("The password is not strong enough or the email has been used");
     }
   };

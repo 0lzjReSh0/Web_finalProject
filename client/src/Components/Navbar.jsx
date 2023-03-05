@@ -1,10 +1,14 @@
 import React from "react";
 
+// Design the Navbar component
 const Navbar = () => {
-    const logOut = () => {
-      localStorage.removeItem("auth_token");
-      alert("Logout successfully")
-    };
+  // Remove the authentication token from the local storage
+  const logOut = () => {
+    localStorage.removeItem("auth_token");
+    // Display an alert to indicate that the user has been logged out
+    alert("Logout successfully");
+  };
+  //navigation bar using Bootstrap classes and HTML tags
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <a className="navbar-brand" href="/">
@@ -39,7 +43,7 @@ const Navbar = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" id="logOut" href="/" onClick = {logOut}>
+            <a className="nav-link" id="logOut" href="/" onClick={logOut}>
               Logout
             </a>
           </li>
