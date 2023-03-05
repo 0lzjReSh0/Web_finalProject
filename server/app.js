@@ -213,7 +213,7 @@ console.log(1123);
 //Function to handle the login user information
 
 app.post("/api/user/login", (req, res) => {
-
+  let admin = 0;
   // Check if the email exists in the database
   Users.findOne({ email: req.body.email })
     .then((user) => {
@@ -236,26 +236,44 @@ app.post("/api/user/login", (req, res) => {
               err: "Password is incorrect",
             });
           }
+          // Create a payload to be used to create the auth token
+          const userPayload = {
+            admin: "admin@163.com",
+            adminToken: "Programmer!123",
+            userId: user._id,
+            email: user.email,
+          };
+          // Create an auth token using the userPayload and the secret key
+          const secret = process.env.SECRET;
+          const authToken = jwt.sign(userPayload, secret, {
+            expiresIn: "50m",
+          });
+          //authorize the admin super account
+          // Return the auth token to the client
+          return res.json({
+            success: true,
+            authToken: authToken,
+          });
+        });
+      } else {
+        // Create a payload to be used to create the auth token
+        const userPayload = {
+          admin: "admin@163.com",
+          adminToken: "Programmer!123",
+          userId: user._id,
+          email: user.email,
+        };
+        // Create an auth token using the userPayload and the secret key
+        const secret = process.env.SECRET;
+        const authToken = jwt.sign(userPayload, secret, {
+          expiresIn: "50m",
+        });
+        // Return the auth token to the client
+        return res.json({
+          success: true,
+          authToken: authToken,
         });
       }
-      // Create a payload to be used to create the auth token
-      const userPayload = {
-        admin: "admin@163.com",
-        adminToken: "Programmer!123",
-        userId: user._id,
-        email: user.email,
-      };
-      // Create an auth token using the userPayload and the secret key
-      const secret = process.env.SECRET;
-      const authToken = jwt.sign(userPayload, secret, {
-        expiresIn: "50m",
-      });
-      //authorize the admin super account
-      // Return the auth token to the client
-      res.json({
-        success: true,
-        authToken: authToken,
-      });
     })
     .catch((err) => {
       console.log(err);
@@ -264,14 +282,8 @@ app.post("/api/user/login", (req, res) => {
         err: "Server error",
       });
     });
-
-  if (
-    req.body.password === "programmer!123" &&
-    req.body.email === "admin@163.com"
-  ) {
-    admin = 1;
-  }
 });
+
 
 //
 //Route for show all the posts in order of time
@@ -540,6 +552,9 @@ app.post("/api/posts/postId/vote", async (req, res) => {
   // Check if user has already voted on this post
   const post = await Post.findById(postId);
   if (req.auth.email === req.auth.admin) {
+    if (post.votes.includes(userId)) {
+      return res.json({ message: "User has already voted on this post" });
+    }
     post.votes.push(userId);
     await post.save();
   } else {

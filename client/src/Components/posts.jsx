@@ -19,7 +19,7 @@ export default function Posts({ post }) {
   const [activePostId, setActivePostId] = useState(null);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-
+  const [commentId, setCommentId] = useState([]);
   const [language, setLanguage] = useState("");
   const [content, setContent] = useState("");
   const [title, setTitle] = useState([]);
@@ -243,6 +243,7 @@ export default function Posts({ post }) {
     setEditCo(response.data.content);
 
     setEditComment(true);
+    setCommentId(commentId)
   }
   //The function to save the comment.
   const handleSaveComment = async (commentId) => {
@@ -269,6 +270,7 @@ export default function Posts({ post }) {
       alert(result.data.message);
 
       setEditCo("");
+      setCommentId("")
 
 
       // Do something with the updated post data
@@ -487,7 +489,7 @@ export default function Posts({ post }) {
                   </small>
                   <>
                     <div className="mt-3">
-                      {editComment ? (
+                      {editComment && comment._id === commentId ? (
                         <form onSubmit={() => handleSaveComment(comment._id)}>
                           <div className="form-group">
                             <label htmlFor="commentContent">Comment</label>
