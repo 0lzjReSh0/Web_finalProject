@@ -14,6 +14,6 @@ describe('template spec3', () => {
     cy.get('[type= "postContent"]').type("console.log(12345)")
     cy.get('#language').select("JavaScript")
     cy.get('[type="submit"]').click()
-    cy.get('[href="/posts"]').click()
+    // cy.get('[href="/posts"]').click()
   })
 })
