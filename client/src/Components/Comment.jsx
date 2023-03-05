@@ -38,7 +38,7 @@ const CommentForm = ({postId,auth_token }) => {
         console.log(error);
       });
   };
-
+  // Render the comment form using the React Bootstrap Form and Button components
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="formComment">
