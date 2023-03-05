@@ -16,11 +16,7 @@ describe('template spec9', () => {
     cy.get('@post').get('#editPostTitle').type("Thinking about love")
     cy.get('@post').get('#editPostContent').type("What is love?\n Love depends on yourself")
     cy.get('@post').get('#SavePost').click();
-    // cy.get('@post').get('#ecomment').type("Maybe there is no answer");
-    // cy.get('@post').get('#submitComment').click();
-    // cy.get('@post').contains('Maybe there is no answer').parent().within(()=>{
-    //     cy.get('#updateComment').click();
-    // })
+
 
     
   })

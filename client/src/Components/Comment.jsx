@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
+/**Version 1.0. now already discard */
 
+// Define the CommentForm component that accepts two props: postId and auth_token
 const CommentForm = ({postId,auth_token }) => {
   const [comment, setComment] = useState({
-    comment: ""
+    comment: "",
   });
-const handleUpdate = e => {
+  // function that updates the comment state whenever the user types something in the textarea
+
+  const handleUpdate = (e) => {
     setComment({ ...comment, [e.target.id]: e.target.value });
-}
+  };
+  // Define a function that handles the form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Make a POST request to the server using axios
     axios
       .post(
         `/api/snippets/comments`,
